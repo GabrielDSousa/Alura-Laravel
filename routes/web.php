@@ -11,6 +11,25 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/series', 'SeriesController@index')->name('serie.index');
+Route::get('/series/adicionar', 'SeriesController@create')->name('serie.create')->middleware('autenticador');
+Route::post('/series/adicionar', 'SeriesController@store')->middleware('autenticador');
+Route::delete('/series/{id}', 'SeriesController@destroy')->middleware('autenticador');
+Route::get('/series/{serieId}/temporadas', 'TemporadasController@index');
+Route::post('/series/{id}/editaNome', 'SeriesController@editaNome')->middleware('autenticador');
+Route::get('/temporadas/{temporada}/episodios', 'EpisodiosController@index');
+Route::post('/temporadas/{temporada}/episodios/assistir', 'EpisodiosController@assistir')->middleware('autenticador');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/entrar', 'EntrarController@index');
+Route::post('/entrar', 'EntrarController@entrar');
+Route::get('/registrar', 'RegistroController@create');
+Route::post('/registrar', 'RegistroController@store');
+
+Route::get('/sair', function () {
+    \Illuminate\Support\Facades\Auth::logout();
+    return redirect('/entrar');
 });
